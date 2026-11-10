@@ -5,8 +5,6 @@ import DetailModal from './components/DetailModal';
 import BrandDrawer from './components/BrandDrawer';
 import './App.css';
 
-const MARCAS_RAPIDAS = ['Dior', 'Chanel', 'Versace', 'Tom Ford', 'Creed'];
-
 export default function App() {
   const [termoBusca, setTermoBusca] = useState('Dior');
   const [marcaAtiva, setMarcaAtiva] = useState('Dior');
@@ -81,39 +79,20 @@ export default function App() {
           <div className="header-spacer" />
         </div>
 
-        <div className="container header-Controls">
+        <div className="container header-controls">
           <form className="search-bar" onSubmit={handleSubmit}>
             <input
               type="text"
               className="search-field"
-              placeholder="Pesquisar por fragrância, marca ou nota..."
+              placeholder="Pesquise por fragrância, notas ou acordes..."
               value={termoBusca}
               onChange={(e) => setTermoBusca(e.target.value)}
-              aria-label="Pesquisar fragrância"
+              aria-label="Pesquisar fragrância, notas ou acordes"
             />
             <button type="submit" className="search-submit">
               Buscar
             </button>
           </form>
-
-          <nav className="filter-nav" aria-label="Marcas em destaque">
-            <div className="filter-pills">
-              {MARCAS_RAPIDAS.map((marca) => {
-                const isAtiva =
-                  marcaAtiva.toLowerCase() === marca.toLowerCase();
-                return (
-                  <button
-                    key={marca}
-                    type="button"
-                    className={`filter-pill ${isAtiva ? 'active' : ''}`}
-                    onClick={() => handleSelecionarMarca(marca)}
-                  >
-                    {marca}
-                  </button>
-                );
-              })}
-            </div>
-          </nav>
         </div>
       </header>
 
