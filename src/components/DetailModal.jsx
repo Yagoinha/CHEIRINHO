@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const PLACEHOLDER_IMAGE =
-  'https://placehold.co/400x480/f1f5f9/475569?text=Perfume';
+  'https://placehold.co/480x600/f7f7f8/71717a?text=CHEIRINHO';
 
 const formatNotes = (notesValue) => {
   if (!notesValue) return null;
@@ -16,6 +16,24 @@ const formatNotes = (notesValue) => {
 };
 
 export default function DetailModal({ item, onClose }) {
+  useEffect(() => {
+    if (!item) return;
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'unset';
+    };
+  }, [item, onClose]);
+
   if (!item) return null;
 
   const nome =
@@ -70,51 +88,66 @@ export default function DetailModal({ item, onClose }) {
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose} aria-label="Fechar">
+    <div className="modal-backdrop" onClick={onClose}>
+      <div
+        className="modal-dialog"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+      >
+        <button
+          type="button"
+          className="modal-close-btn"
+          onClick={onClose}
+          aria-label="Fechar detalhes"
+        >
           ✕
         </button>
 
-        <div className="modal-grid">
-          <div className="modal-image-container">
+        <div className="modal-columns">
+          <div className="modal-media">
             <img
               src={imagem}
               alt={nome}
               onError={handleImageError}
-              className="modal-image"
+              className="modal-product-image"
             />
           </div>
 
-          <div className="modal-info">
+          <div className="modal-details">
             <span className="modal-brand">{marca}</span>
             <h2 className="modal-title">{nome}</h2>
             <p className="modal-description">{descricao}</p>
 
-            <div className="modal-notes">
-              <h4>Notas e Acordes</h4>
+            <div className="modal-pyramid">
+              <h4 className="modal-section-title">Pirâmide Olfativa</h4>
               {notasTopo || notasCoracao || notasBase ? (
-                <ul>
+                <div className="modal-note-list">
                   {notasTopo && (
-                    <li>
-                      <strong>Topo:</strong> {notasTopo}
-                    </li>
+                    <div className="modal-note-row">
+                      <span className="modal-note-label">Topo</span>
+                      <span className="modal-note-value">{notasTopo}</span>
+                    </div>
                   )}
                   {notasCoracao && (
-                    <li>
-                      <strong>Coração:</strong> {notasCoracao}
-                    </li>
+                    <div className="modal-note-row">
+                      <span className="modal-note-label">Coração</span>
+                      <span className="modal-note-value">{notasCoracao}</span>
+                    </div>
                   )}
                   {notasBase && (
-                    <li>
-                      <strong>Base:</strong> {notasBase}
-                    </li>
+                    <div className="modal-note-row">
+                      <span className="modal-note-label">Base</span>
+                      <span className="modal-note-value">{notasBase}</span>
+                    </div>
                   )}
-                </ul>
+                </div>
               ) : notasGerais ? (
-                <p>{notasGerais}</p>
+                <p className="modal-note-fallback">{notasGerais}</p>
               ) : (
-                <p>Notas olfativas não detalhadas no catálogo para este item.</p>
+                <p className="modal-note-fallback">
+                  Notas olfativas não especificadas para esta edição.
+                </p>
               )}
             </div>
           </div>

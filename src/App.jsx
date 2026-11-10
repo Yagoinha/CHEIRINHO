@@ -4,10 +4,11 @@ import FragranceCard from './components/FragranceCard';
 import DetailModal from './components/DetailModal';
 import './App.css';
 
-const MARCAS_RAPIDAS = ['Dior', 'Chanel', 'Versace', 'Tom Ford'];
+const MARCAS_RAPIDAS = ['Dior', 'Chanel', 'Versace', 'Tom Ford', 'Creed'];
 
 export default function App() {
   const [termoBusca, setTermoBusca] = useState('Dior');
+  const [marcaAtiva, setMarcaAtiva] = useState('Dior');
   const [perfumes, setPerfumes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState(null);
@@ -24,9 +25,7 @@ export default function App() {
       const dados = await fetchFragrances(consulta);
       setPerfumes(Array.isArray(dados) ? dados : []);
     } catch (err) {
-      setErro(
-        err.message || 'Não foi possível carregar os perfumes no momento.'
-      );
+      setErro('Não foi possível carregar o catálogo no momento.');
       setPerfumes([]);
     } finally {
       setLoading(false);
@@ -39,75 +38,84 @@ export default function App() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    buscarPerfumes(termoBusca);
+    const limpo = termoBusca.trim();
+    if (!limpo) return;
+
+    const marcaEncontrada = MARCAS_RAPIDAS.find(
+      (m) => m.toLowerCase() === limpo.toLowerCase()
+    );
+    setMarcaAtiva(marcaEncontrada || '');
+    buscarPerfumes(limpo);
   };
 
   const handleFiltroMarca = (marca) => {
     setTermoBusca(marca);
+    setMarcaAtiva(marca);
     buscarPerfumes(marca);
   };
 
   return (
-    <div className="app-wrapper">
-      <header className="header">
-        <div className="container header-content">
-          <div>
-            <h1 className="logo">CHEIRINHO</h1>
-            <p className="subtitle">Catálogo de Perfumes</p>
-          </div>
-          <div className={`api-status ${erro ? 'status-error' : 'status-ok'}`}>
-            <span className="status-dot" />
-            <span>{erro ? 'Erro na API' : 'API Conectada'}</span>
-          </div>
-        </div>
-      </header>
+    <div className="storefront">
+      <header className="site-header">
+        <div className="container header-inner">
+          <a
+            href="#topo"
+            className="brand-wordmark"
+            onClick={(e) => {
+              e.preventDefault();
+              handleFiltroMarca('Dior');
+            }}
+          >
+            CHEIRINHO
+          </a>
 
-      <main className="container main-content">
-        <section className="search-section">
-          <form className="search-form" onSubmit={handleSubmit}>
+          <form className="search-bar" onSubmit={handleSubmit}>
             <input
               type="text"
-              className="search-input"
-              placeholder="Digite o nome de um perfume ou marca..."
+              className="search-field"
+              placeholder="Pesquisar por fragrância, marca ou nota..."
               value={termoBusca}
               onChange={(e) => setTermoBusca(e.target.value)}
+              aria-label="Pesquisar fragrância"
             />
-            <button type="submit" className="search-button">
+            <button type="submit" className="search-submit">
               Buscar
             </button>
           </form>
+        </div>
 
-          <div className="quick-filters">
-            <span className="filter-label">Marcas rápidas:</span>
-            {MARCAS_RAPIDAS.map((marca) => (
-              <button
-                key={marca}
-                type="button"
-                className={`filter-pill ${
-                  termoBusca.toLowerCase() === marca.toLowerCase()
-                    ? 'active'
-                    : ''
-                }`}
-                onClick={() => handleFiltroMarca(marca)}
-              >
-                {marca}
-              </button>
-            ))}
+        <nav className="container filter-nav" aria-label="Marcas em destaque">
+          <div className="filter-pills">
+            {MARCAS_RAPIDAS.map((marca) => {
+              const isAtiva = marcaAtiva.toLowerCase() === marca.toLowerCase();
+              return (
+                <button
+                  key={marca}
+                  type="button"
+                  className={`filter-pill ${isAtiva ? 'active' : ''}`}
+                  onClick={() => handleFiltroMarca(marca)}
+                >
+                  {marca}
+                </button>
+              );
+            })}
           </div>
-        </section>
+        </nav>
+      </header>
 
+      <main className="container catalog-main">
         {loading && (
-          <div className="state-box">
-            <p className="loading-text">Carregando perfumes...</p>
+          <div className="status-message">
+            <p>Carregando perfumes...</p>
           </div>
         )}
 
         {!loading && erro && (
-          <div className="state-box error-box">
+          <div className="status-message">
             <p>{erro}</p>
             <button
               type="button"
-              className="retry-button"
+              className="minimal-retry-btn"
               onClick={() => buscarPerfumes(termoBusca || 'Dior')}
             >
               Tentar novamente
@@ -116,13 +124,13 @@ export default function App() {
         )}
 
         {!loading && !erro && perfumes.length === 0 && (
-          <div className="state-box">
+          <div className="status-message">
             <p>Nenhum perfume encontrado para a sua busca.</p>
           </div>
         )}
 
         {!loading && !erro && perfumes.length > 0 && (
-          <section className="catalog-grid">
+          <section className="product-grid">
             {perfumes.map((item, index) => (
               <FragranceCard
                 key={item.id || item._id || `${item.name}-${index}`}
@@ -134,9 +142,9 @@ export default function App() {
         )}
       </main>
 
-      <footer className="footer">
+      <footer className="site-footer">
         <div className="container">
-          <p>CHEIRINHO — Projeto Acadêmico em React + Vite</p>
+          <p>CHEIRINHO — Catálogo Olfativo</p>
         </div>
       </footer>
 

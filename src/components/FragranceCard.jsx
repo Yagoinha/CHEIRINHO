@@ -1,7 +1,7 @@
 import React from 'react';
 
 const PLACEHOLDER_IMAGE =
-  'https://placehold.co/300x360/f1f5f9/475569?text=Perfume';
+  'https://placehold.co/320x400/f7f7f8/71717a?text=CHEIRINHO';
 
 export default function FragranceCard({ item, onSelect }) {
   const nome =
@@ -32,20 +32,20 @@ export default function FragranceCard({ item, onSelect }) {
   };
 
   return (
-    <div className="card" onClick={() => onSelect(item)}>
-      <div className="card-image-wrapper">
+    <article className="product-card" onClick={() => onSelect(item)}>
+      <div className="product-image-box">
         <img
           src={imagem}
           alt={nome}
           onError={handleImageError}
-          className="card-image"
+          className="product-image"
           loading="lazy"
         />
       </div>
-      <div className="card-body">
-        <span className="card-brand">{marca}</span>
-        <h3 className="card-title">{nome}</h3>
+      <div className="product-meta">
+        <span className="product-brand">{marca}</span>
+        <h3 className="product-title">{nome}</h3>
       </div>
-    </div>
+    </article>
   );
 }
