@@ -1,50 +1,37 @@
-# CHEIRINHO — Catálogo de Perfumes
+# CHEIRINHO — Catálogo Olfativo
 
-O **Cheirinho** é um projeto acadêmico desenvolvido para a faculdade com o objetivo de criar um catálogo de perfumes funcional, rápido e direto ao ponto. A aplicação consome dados em tempo real da **Fragrance API** (via RapidAPI) usando React com Vite e estilização em CSS puro.
+Interface web minimalista para consulta e exploração de fragrâncias, notas olfativas e casas de perfumaria em tempo real. Projeto desenvolvido para a disciplina de desenvolvimento web com consumo de API externa.
 
----
-
-## Tecnologias Utilizadas
-
-- **React 18** (Hooks `useState` e `useEffect` para gerenciar busca, listagem e modal)
-- **Vite** (ferramenta de build rápida e leve)
-- **CSS Puro** (`App.css` e `index.css` com Flexbox, CSS Grid e responsividade sem depender de bibliotecas externas)
-- **Fetch API** (requisições HTTP nativas do JavaScript)
+**Link em Produção:** [cheirinho.vercel.app](https://cheirinho.vercel.app)
 
 ---
 
-## Como rodar o projeto localmente
+## Proposta
 
-### 1. Instale as dependências
-No terminal, dentro da pasta do projeto, execute:
+A proposta foi construir uma aplicação rápida e limpa no estilo editorial, focada no produto e sem poluição visual. O app consome uma base remota de perfumaria, trata o retorno dos dados em tempo real e entrega uma navegação fluida por marcas e notas olfativas.
 
+### Principais Funcionalidades
+
+- **Busca Dinâmica:** Pesquisa textual por termos, nomes de perfumes ou acordes específicos.
+- **Navegação por Marcas (Drawer):** Menu lateral com seleção direta de casas de perfumaria (Dior, Tom Ford, Chanel, Creed, etc.).
+- **Tradução de Notas (PT-BR):** Dicionário utilitário interno para converter os termos olfativos em inglês da API para o português de forma nativa.
+- **Detalhamento em Modal:** Exibição da pirâmide olfativa com notas de topo, coração e base ao selecionar um frasco.
+- **Tratamento de Imagens e Falhas:** Fallback automático com `onError` para links externos quebrados e contingência caso a rota da API fique indisponível.
+
+---
+
+## Tecnologias
+
+- **React JS** (Vite)
+- **CSS3 Nativo** (sem frameworks utilitários externos)
+- **Fragrance API** (RapidAPI) via requisições assíncronas `fetch`
+- **Vercel** (Deploy contínuo integrado ao GitHub)
+
+---
+
+## Como rodar localmente
+
+1. Clone o repositório:
 ```bash
-npm install
-```
-
-### 2. Configure as variáveis de ambiente (Opcional)
-O projeto já conta com a chave configurada por padrão no serviço para facilitar os testes da apresentação, mas você também pode criar um arquivo `.env` na raiz copiando o `.env.example`:
-
-```env
-VITE_RAPIDAPI_KEY=2dc9e34b51mshaee8d428b67c50cp11432bjsn12e7e764c2e9
-VITE_RAPIDAPI_HOST=fragrance-api.p.rapidapi.com
-```
-
-### 3. Inicie o servidor de desenvolvimento
-Execute o comando abaixo e abra o endereço indicado no terminal (normalmente `http://localhost:5173`):
-
-```bash
-npm run dev
-```
-
----
-
-## Passo a passo para Deploy na Vercel
-
-1. Suba o código do projeto para um repositório no seu **GitHub**.
-2. Acesse a [Vercel](https://vercel.com/) e clique em **Add New Project**.
-3. Importe o repositório do projeto.
-4. Na seção **Environment Variables**, adicione:
-   - `VITE_RAPIDAPI_KEY`: `2dc9e34b51mshaee8d428b67c50cp11432bjsn12e7e764c2e9`
-   - `VITE_RAPIDAPI_HOST`: `fragrance-api.p.rapidapi.com`
-5. Clique em **Deploy** e aguarde a geração do link final.
+git clone [https://github.com/Yagoinha/CHEIRINHO.git](https://github.com/Yagoinha/CHEIRINHO.git)
+cd CHEIRINHO
