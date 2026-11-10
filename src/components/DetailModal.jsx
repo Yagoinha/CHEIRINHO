@@ -1,18 +1,12 @@
 import React, { useEffect } from 'react';
+import { traduzirListaNotas } from '../utils/tradutorNotas';
 
 const PLACEHOLDER_IMAGE =
   'https://placehold.co/480x600/f7f7f8/71717a?text=CHEIRINHO';
 
-const formatNotes = (notesValue) => {
-  if (!notesValue) return null;
-  if (Array.isArray(notesValue)) {
-    const cleaned = notesValue
-      .map((n) => (typeof n === 'string' ? n : n?.name || n?.note || ''))
-      .filter(Boolean);
-    return cleaned.length > 0 ? cleaned.join(', ') : null;
-  }
-  if (typeof notesValue === 'string') return notesValue;
-  return null;
+const formatTranslatedNotes = (notesValue) => {
+  const traduzidas = traduzirListaNotas(notesValue);
+  return traduzidas.length > 0 ? traduzidas.join(', ') : null;
 };
 
 export default function DetailModal({ item, onClose }) {
@@ -58,16 +52,10 @@ export default function DetailModal({ item, onClose }) {
     item.thumbnail ||
     PLACEHOLDER_IMAGE;
 
-  const descricao =
-    item.description ||
-    item.summary ||
-    item.about ||
-    `Fragrância assinada pela casa ${marca}, desenvolvida com matérias-primas selecionadas para proporcionar uma experiência olfativa marcante e elegante.`;
-
-  const notasTopo = formatNotes(
+  const notasTopo = formatTranslatedNotes(
     item.topNotesList || item.topNotes || item.top_notes || item.notes?.top
   );
-  const notasCoracao = formatNotes(
+  const notasCoracao = formatTranslatedNotes(
     item.middleNotesList ||
       item.middleNotes ||
       item.middle_notes ||
@@ -75,12 +63,18 @@ export default function DetailModal({ item, onClose }) {
       item.notes?.middle ||
       item.notes?.heart
   );
-  const notasBase = formatNotes(
+  const notasBase = formatTranslatedNotes(
     item.baseNotesList || item.baseNotes || item.base_notes || item.notes?.base
   );
-  const notasGerais = formatNotes(
+  const notasGerais = formatTranslatedNotes(
     item.accordsList || item.notes || item.accords || item.mainAccords
   );
+
+  const descricao =
+    item.description ||
+    item.summary ||
+    item.about ||
+    `Fragrância assinada pela casa ${marca}, desenvolvida com matérias-primas selecionadas para proporcionar uma experiência olfativa marcante e elegante.`;
 
   const handleImageError = (event) => {
     event.currentTarget.onerror = null;

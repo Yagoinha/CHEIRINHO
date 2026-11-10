@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchFragrances } from './services/api';
 import FragranceCard from './components/FragranceCard';
 import DetailModal from './components/DetailModal';
+import BrandDrawer from './components/BrandDrawer';
 import './App.css';
 
 const MARCAS_RAPIDAS = ['Dior', 'Chanel', 'Versace', 'Tom Ford', 'Creed'];
@@ -13,6 +14,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState(null);
   const [perfumeSelecionado, setPerfumeSelecionado] = useState(null);
+  const [menuAberto, setMenuAberto] = useState(false);
 
   const buscarPerfumes = async (termo) => {
     const consulta = termo.trim();
@@ -41,14 +43,11 @@ export default function App() {
     const limpo = termoBusca.trim();
     if (!limpo) return;
 
-    const marcaEncontrada = MARCAS_RAPIDAS.find(
-      (m) => m.toLowerCase() === limpo.toLowerCase()
-    );
-    setMarcaAtiva(marcaEncontrada || '');
+    setMarcaAtiva(limpo);
     buscarPerfumes(limpo);
   };
 
-  const handleFiltroMarca = (marca) => {
+  const handleSelecionarMarca = (marca) => {
     setTermoBusca(marca);
     setMarcaAtiva(marca);
     buscarPerfumes(marca);
@@ -57,18 +56,32 @@ export default function App() {
   return (
     <div className="storefront">
       <header className="site-header">
-        <div className="container header-inner">
+        <div className="container header-top">
+          <button
+            type="button"
+            className="hamburger-btn"
+            onClick={() => setMenuAberto(true)}
+            aria-label="Abrir menu de marcas"
+          >
+            <span className="hamburger-icon">☰</span>
+            <span className="hamburger-label">Marcas</span>
+          </button>
+
           <a
             href="#topo"
             className="brand-wordmark"
             onClick={(e) => {
               e.preventDefault();
-              handleFiltroMarca('Dior');
+              handleSelecionarMarca('Dior');
             }}
           >
             CHEIRINHO
           </a>
 
+          <div className="header-spacer" />
+        </div>
+
+        <div className="container header-Controls">
           <form className="search-bar" onSubmit={handleSubmit}>
             <input
               type="text"
@@ -82,25 +95,26 @@ export default function App() {
               Buscar
             </button>
           </form>
-        </div>
 
-        <nav className="container filter-nav" aria-label="Marcas em destaque">
-          <div className="filter-pills">
-            {MARCAS_RAPIDAS.map((marca) => {
-              const isAtiva = marcaAtiva.toLowerCase() === marca.toLowerCase();
-              return (
-                <button
-                  key={marca}
-                  type="button"
-                  className={`filter-pill ${isAtiva ? 'active' : ''}`}
-                  onClick={() => handleFiltroMarca(marca)}
-                >
-                  {marca}
-                </button>
-              );
-            })}
-          </div>
-        </nav>
+          <nav className="filter-nav" aria-label="Marcas em destaque">
+            <div className="filter-pills">
+              {MARCAS_RAPIDAS.map((marca) => {
+                const isAtiva =
+                  marcaAtiva.toLowerCase() === marca.toLowerCase();
+                return (
+                  <button
+                    key={marca}
+                    type="button"
+                    className={`filter-pill ${isAtiva ? 'active' : ''}`}
+                    onClick={() => handleSelecionarMarca(marca)}
+                  >
+                    {marca}
+                  </button>
+                );
+              })}
+            </div>
+          </nav>
+        </div>
       </header>
 
       <main className="container catalog-main">
@@ -142,11 +156,12 @@ export default function App() {
         )}
       </main>
 
-      <footer className="site-footer">
-        <div className="container">
-          <p>CHEIRINHO — Catálogo Olfativo</p>
-        </div>
-      </footer>
+      <BrandDrawer
+        isOpen={menuAberto}
+        onClose={() => setMenuAberto(false)}
+        selectedBrand={marcaAtiva}
+        onSelectBrand={handleSelecionarMarca}
+      />
 
       <DetailModal
         item={perfumeSelecionado}
