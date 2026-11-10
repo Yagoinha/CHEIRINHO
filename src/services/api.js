@@ -1,33 +1,35 @@
-const API_URL = 'https://fragrance-api.p.rapidapi.com/searchIndex';
+export async function fetchFragrances(searchTerm = 'Dior') {
+  const url = 'https://fragrance-api.p.rapidapi.com/indexes/searchIndex';
 
-export async function fetchSearch(termoDeBusca = 'Dior') {
-  const apiKey =
-    import.meta.env.VITE_RAPIDAPI_KEY ||
-    '2dc9e34b51mshaee8d428b67c50cp11432bjsn12e7e764c2e9';
-  const apiHost =
-    import.meta.env.VITE_RAPIDAPI_HOST || 'fragrance-api.p.rapidapi.com';
-
-  const response = await fetch(API_URL, {
+  const options = {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
-      'x-rapidapi-key': apiKey,
-      'x-rapidapi-host': apiHost,
+      'x-rapidapi-key': import.meta.env.VITE_RAPIDAPI_KEY || '2dc9e34b51mshaee8d428b67c50cp11432bjsn12e7e764c2e9',
+      'x-rapidapi-host': 'fragrance-api.p.rapidapi.com'
     },
-    body: JSON.stringify({ q: termoDeBusca }),
-  });
+    body: JSON.stringify({
+      q: searchTerm
+    })
+  };
 
-  if (!response.ok) {
-    throw new Error(`Erro na requisição da API (Status: ${response.status})`);
+  try {
+    let response = await fetch(url, options);
+
+    if (response.status === 404) {
+      response = await fetch('https://fragrance-api.p.rapidapi.com/searchIndex', options);
+    }
+
+    if (!response.ok) {
+      throw new Error(`Erro na API: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.hits || data.results || data || [];
+  } catch (err) {
+    console.error(err);
+    throw err;
   }
-
-  const data = await response.json();
-
-  if (Array.isArray(data)) return data;
-  if (Array.isArray(data?.hits)) return data.hits;
-  if (Array.isArray(data?.results)) return data.results;
-  if (Array.isArray(data?.data)) return data.data;
-  if (Array.isArray(data?.fragrances)) return data.fragrances;
-
-  return [];
 }
+
+export const fetchSearch = fetchFragrances;

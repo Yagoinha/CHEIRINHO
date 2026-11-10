@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchSearch } from './services/api';
+import { fetchFragrances } from './services/api';
 import FragranceCard from './components/FragranceCard';
 import DetailModal from './components/DetailModal';
 import './App.css';
@@ -21,8 +21,8 @@ export default function App() {
     setErro(null);
 
     try {
-      const dados = await fetchSearch(consulta);
-      setPerfumes(dados);
+      const dados = await fetchFragrances(consulta);
+      setPerfumes(Array.isArray(dados) ? dados : []);
     } catch (err) {
       setErro(
         err.message || 'Não foi possível carregar os perfumes no momento.'
