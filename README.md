@@ -1,52 +1,50 @@
-# CHEIRINHO — Guia & Catálogo Olfativo
+# CHEIRINHO — Catálogo de Perfumes
 
-O **Cheirinho** é uma aplicação web criada como projeto acadêmico de faculdade para consultar e explorar perfumes do mundo todo. A ideia foi construir uma interface limpa, rápida e fácil de usar, que consome dados reais da **Fragrance API** (via RapidAPI) para mostrar marcas, fotos dos frascos e a pirâmide olfativa (notas de topo, coração e base) de cada fragrância.
-
----
-
-## Tecnologias utilizadas
-
-- **React 18** (componentização e controle de estado com Hooks)
-- **Vite** (ambiente de desenvolvimento rápido e build leve)
-- **Tailwind CSS** (estilização responsiva com visual limpo e editorial)
-- **Lucide React** (ícones minimalistas)
-- **Fetch API nativa** (comunicação direta com a Fragrance API na RapidAPI)
+O **Cheirinho** é um projeto acadêmico desenvolvido para a faculdade com o objetivo de criar um catálogo de perfumes funcional, rápido e direto ao ponto. A aplicação consome dados em tempo real da **Fragrance API** (via RapidAPI) usando React com Vite e estilização em CSS puro.
 
 ---
 
-## Como rodar o projeto na sua máquina (3 passos)
+## Tecnologias Utilizadas
 
-### 1. Clone a pasta e instale as dependências
-Abra o terminal na pasta do projeto e rode:
+- **React 18** (Hooks `useState` e `useEffect` para gerenciar busca, listagem e modal)
+- **Vite** (ferramenta de build rápida e leve)
+- **CSS Puro** (`App.css` e `index.css` com Flexbox, CSS Grid e responsividade sem depender de bibliotecas externas)
+- **Fetch API** (requisições HTTP nativas do JavaScript)
+
+---
+
+## Como rodar o projeto localmente
+
+### 1. Instale as dependências
+No terminal, dentro da pasta do projeto, execute:
 
 ```bash
 npm install
 ```
 
-### 2. Configure sua chave da RapidAPI
-Crie um arquivo chamado `.env` na raiz do projeto (você pode copiar o `.env.example`) e coloque a sua chave da Fragrance API:
+### 2. Configure as variáveis de ambiente (Opcional)
+O projeto já conta com a chave configurada por padrão no serviço para facilitar os testes da apresentação, mas você também pode criar um arquivo `.env` na raiz copiando o `.env.example`:
 
 ```env
-VITE_RAPIDAPI_KEY=sua_chave_aqui
+VITE_RAPIDAPI_KEY=2dc9e34b51mshaee8d428b67c50cp11432bjsn12e7e764c2e9
 VITE_RAPIDAPI_HOST=fragrance-api.p.rapidapi.com
 ```
 
-### 3. Inicie o servidor local
-Agora é só subir o projeto:
+### 3. Inicie o servidor de desenvolvimento
+Execute o comando abaixo e abra o endereço indicado no terminal (normalmente `http://localhost:5173`):
 
 ```bash
 npm run dev
 ```
 
-Depois disso, abra o link exibido no terminal (geralmente `http://localhost:5173`) no navegador.
-
 ---
 
-## Como fazer o deploy na Vercel
+## Passo a passo para Deploy na Vercel
 
-1. Suba este projeto para um repositório no seu **GitHub**.
-2. Entre na sua conta da [Vercel](https://vercel.com/), clique em **Add New Project** e importe o repositório.
-3. Antes de clicar em **Deploy**, abra a aba **Environment Variables** e adicione as duas variáveis abaixo:
-   - `VITE_RAPIDAPI_KEY` com o valor da sua chave da RapidAPI.
-   - `VITE_RAPIDAPI_HOST` com o valor `fragrance-api.p.rapidapi.com`.
-4. Clique em **Deploy** e pronto: o site estará no ar em poucos segundos.
+1. Suba o código do projeto para um repositório no seu **GitHub**.
+2. Acesse a [Vercel](https://vercel.com/) e clique em **Add New Project**.
+3. Importe o repositório do projeto.
+4. Na seção **Environment Variables**, adicione:
+   - `VITE_RAPIDAPI_KEY`: `2dc9e34b51mshaee8d428b67c50cp11432bjsn12e7e764c2e9`
+   - `VITE_RAPIDAPI_HOST`: `fragrance-api.p.rapidapi.com`
+5. Clique em **Deploy** e aguarde a geração do link final.
