@@ -6,11 +6,21 @@ const PLACEHOLDER_IMAGE =
 export default function FragranceCard({ item, onSelect }) {
   const nome =
     item.name || item.Name || item.perfume || item.title || 'Perfume Exclusivo';
+
   const marca =
-    item.brand || item.Brand || item.house || item.designer || 'Marca Clássica';
+    item.brandName ||
+    (typeof item.brand === 'object' && item.brand !== null
+      ? item.brand.name
+      : item.brand) ||
+    item.Brand ||
+    item.house ||
+    'Marca Clássica';
+
   const imagem =
-    item.image ||
     item.imageUrl ||
+    (typeof item.image === 'object' && item.image !== null
+      ? item.image.url
+      : item.image) ||
     item.img ||
     item.image_url ||
     item.thumbnail ||

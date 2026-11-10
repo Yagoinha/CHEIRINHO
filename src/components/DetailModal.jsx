@@ -6,19 +6,10 @@ const PLACEHOLDER_IMAGE =
 const formatNotes = (notesValue) => {
   if (!notesValue) return null;
   if (Array.isArray(notesValue)) {
-    return notesValue
+    const cleaned = notesValue
       .map((n) => (typeof n === 'string' ? n : n?.name || n?.note || ''))
-      .filter(Boolean)
-      .join(', ');
-  }
-  if (typeof notesValue === 'object') {
-    const parts = [
-      ...(Array.isArray(notesValue.top) ? notesValue.top : []),
-      ...(Array.isArray(notesValue.middle) ? notesValue.middle : []),
-      ...(Array.isArray(notesValue.heart) ? notesValue.heart : []),
-      ...(Array.isArray(notesValue.base) ? notesValue.base : []),
-    ];
-    return parts.length > 0 ? parts.join(', ') : null;
+      .filter(Boolean);
+    return cleaned.length > 0 ? cleaned.join(', ') : null;
   }
   if (typeof notesValue === 'string') return notesValue;
   return null;
@@ -29,11 +20,21 @@ export default function DetailModal({ item, onClose }) {
 
   const nome =
     item.name || item.Name || item.perfume || item.title || 'Perfume Exclusivo';
+
   const marca =
-    item.brand || item.Brand || item.house || item.designer || 'Marca Clássica';
+    item.brandName ||
+    (typeof item.brand === 'object' && item.brand !== null
+      ? item.brand.name
+      : item.brand) ||
+    item.Brand ||
+    item.house ||
+    'Marca Clássica';
+
   const imagem =
-    item.image ||
     item.imageUrl ||
+    (typeof item.image === 'object' && item.image !== null
+      ? item.image.url
+      : item.image) ||
     item.img ||
     item.image_url ||
     item.thumbnail ||
@@ -45,12 +46,23 @@ export default function DetailModal({ item, onClose }) {
     item.about ||
     `Fragrância assinada pela casa ${marca}, desenvolvida com matérias-primas selecionadas para proporcionar uma experiência olfativa marcante e elegante.`;
 
-  const notasTopo = formatNotes(item.topNotes || item.top_notes || item.notes?.top);
-  const notasCoracao = formatNotes(
-    item.middleNotes || item.middle_notes || item.heartNotes || item.notes?.middle || item.notes?.heart
+  const notasTopo = formatNotes(
+    item.topNotesList || item.topNotes || item.top_notes || item.notes?.top
   );
-  const notasBase = formatNotes(item.baseNotes || item.base_notes || item.notes?.base);
-  const notasGerais = formatNotes(item.notes || item.accords || item.mainAccords);
+  const notasCoracao = formatNotes(
+    item.middleNotesList ||
+      item.middleNotes ||
+      item.middle_notes ||
+      item.heartNotes ||
+      item.notes?.middle ||
+      item.notes?.heart
+  );
+  const notasBase = formatNotes(
+    item.baseNotesList || item.baseNotes || item.base_notes || item.notes?.base
+  );
+  const notasGerais = formatNotes(
+    item.accordsList || item.notes || item.accords || item.mainAccords
+  );
 
   const handleImageError = (event) => {
     event.currentTarget.onerror = null;
